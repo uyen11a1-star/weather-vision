@@ -1,4 +1,11 @@
 @media (max-width: 768px) {
-    .panel { width: calc(100% - 40px); right: 20px; left: 20px; top: auto; bottom: 20px; max-height: 40vh; overflow-y: auto; }
-    #controls { right: 20px; }
+    #top-bar { top: 10px; left: 10px; right: 10px; }
+    .search-container input { width: 100%; }
+    #dashboard {
+        top: auto; bottom: 90px; left: 10px; right: 10px; width: auto;
+        padding: 16px;
+    }
+    .current-weather { margin: 15px 0; }
+    .temp-display { font-size: 42px; }
+    #timeline-container { bottom: 10px; left: 10px; right: 10px; padding: 12px; gap: 10px; }
 }

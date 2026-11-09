@@ -1,0 +1,95 @@
+#dashboard {
+    position: absolute;
+    top: 20px; right: 20px;
+    width: 320px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    z-index: 1000;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: slideIn 0.5s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.panel-header h2 { font-size: 22px; font-weight: 600; margin-bottom: 4px; }
+.panel-header p { font-size: 13px; color: var(--text-muted); }
+
+.current-weather {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.temp-display { font-size: 56px; font-weight: 800; line-height: 1; }
+.temp-display .unit { font-size: 24px; font-weight: 400; color: var(--text-muted); }
+
+.weather-desc {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+#weather-icon { font-size: 40px; }
+#weather-text { font-size: 14px; font-weight: 600; }
+
+.weather-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    background: rgba(255,255,255,0.03);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.detail-item { display: flex; flex-direction: column; gap: 4px; }
+.detail-item .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.detail-item .value { font-size: 16px; font-weight: 600; color: var(--accent); }
+
+/* Timeline */
+#timeline-container {
+    position: absolute;
+    bottom: 20px; left: 20px; right: 20px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 24px;
+    z-index: 1000;
+    backdrop-filter: blur(16px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+#timeline-info, #hour-display {
+    font-size: 14px; font-weight: 600; color: var(--text-main); min-width: 70px;
+}
+
+input[type=range] {
+    flex: 1;
+    -webkit-appearance: none;
+    background: rgba(255,255,255,0.1);
+    height: 6px;
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    transition: transform 0.1s;
+}
+input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }

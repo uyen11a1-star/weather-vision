@@ -2,35 +2,76 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Vision</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Weather Vision - Bản đồ Thời tiết</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/map.css">
     <link rel="stylesheet" href="styles/dashboard.css">
     <link rel="stylesheet" href="styles/responsive.css">
+    <!-- Font Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <div id="map"></div>
-        <div id="dashboard" class="panel">
-            <h2>Weather Vision</h2>
-            <div id="location-info">Đang tải...</div>
-            <div id="forecast-panel"></div>
-            <div id="alert-panel"></div>
+    <!-- Thanh tìm kiếm nổi -->
+    <div id="top-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Tìm thành phố, tọa độ... (VD: Hà Nội)">
+            <button id="search-btn">🔍</button>
         </div>
-        <div id="controls">
-            <input type="text" id="search-input" placeholder="Tìm thành phố...">
-            <button id="search-btn">Tìm</button>
-            <div id="layer-toggles">
-                <label><input type="checkbox" id="toggle-wind" checked> Gió</label>
-                <label><input type="checkbox" id="toggle-rain"> Mưa</label>
-                <label><input type="checkbox" id="toggle-clouds"> Mây</label>
-                <label><input type="checkbox" id="toggle-storm"> Bão</label>
+        <div id="layer-toggles">
+            <button class="toggle-btn active" data-layer="wind">💨 Gió</button>
+            <button class="toggle-btn" data-layer="rain">🌧️ Mưa</button>
+            <button class="toggle-btn" data-layer="clouds">☁️ Mây</button>
+        </div>
+    </div>
+
+    <!-- Bản đồ -->
+    <div id="map"></div>
+
+    <!-- Panel thời tiết bên phải -->
+    <div id="dashboard" class="panel">
+        <div class="panel-header">
+            <h2 id="location-name">Đang tải...</h2>
+            <p id="location-coords">--</p>
+        </div>
+        <div class="current-weather">
+            <div class="temp-display">
+                <span id="current-temp">--</span><span class="unit">°C</span>
+            </div>
+            <div class="weather-desc">
+                <span id="weather-icon">☀️</span>
+                <span id="weather-text">Đang cập nhật</span>
+            </div>
+        </div>
+        <div class="weather-details">
+            <div class="detail-item">
+                <span class="label">Sức gió</span>
+                <span class="value" id="wind-speed">-- km/h</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Hướng gió</span>
+                <span class="value" id="wind-dir">--</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Độ ẩm</span>
+                <span class="value" id="humidity">--%</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Lượng mưa</span>
+                <span class="value" id="precipitation">-- mm</span>
             </div>
         </div>
     </div>
+
+    <!-- Thanh Timeline dưới cùng -->
+    <div id="timeline-container">
+        <div id="timeline-info">Hôm nay</div>
+        <input type="range" id="time-slider" min="0" max="23" value="0" step="1">
+        <div id="hour-display">Bây giờ</div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet-velocity@1.8.0/dist/leaflet-velocity.min.js"></script>
     <script src="src/config.js"></script>
