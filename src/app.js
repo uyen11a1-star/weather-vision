@@ -1,22 +1,26 @@
 import { MapEngine } from './map/map-engine.js';
-import { LayerManager } from './map/layer-manager.js';
 import { ForecastEngine } from './forecast/forecast-engine.js';
 import { WeatherPanel } from './dashboard/weather-panel.js';
+import { WindRenderer } from './visualization/wind-renderer.js';
+import { RainRenderer } from './visualization/rain-renderer.js';
 import { CONFIG } from './config.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const mapEngine = new MapEngine('map', CONFIG.DEFAULT_LOCATION, CONFIG.DEFAULT_ZOOM);
-    const layerManager = new LayerManager(mapEngine.map);
     const forecastEngine = new ForecastEngine();
     const weatherPanel = new WeatherPanel();
+
+    // Khởi tạo các Engine vẽ Canvas tự chế
+    const windRenderer = new WindRenderer(mapEngine.map);
+    const rainRenderer = new RainRenderer(mapEngine.map);
 
     // Tải dữ liệu mặc định (Hà Nội)
     let currentLocation = CONFIG.DEFAULT_LOCATION;
     let currentForecast = await forecastEngine.loadForecast(currentLocation.lat, currentLocation.lng);
     weatherPanel.render(currentForecast, currentLocation.name);
     
-    // Bật lớp gió mặc định
-    await layerManager.addWindLayer(currentLocation.lat, currentLocation.lng);
+    // Bật gió mặc định
+    windRenderer.start();
 
     // Xử lý sự kiện Tìm kiếm
     document.getElementById('search-btn').addEventListener('click', handleSearch);
@@ -38,42 +42,33 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             currentForecast = await forecastEngine.loadForecast(loc.lat, loc.lng);
             weatherPanel.render(currentForecast, loc.name);
-            
-            await layerManager.addWindLayer(loc.lat, loc.lng);
         } else {
             alert('Không tìm thấy địa điểm này!');
         }
     }
 
-    // Xử lý Toggles (Bật/tắt lớp)
+    // Xử lý Toggles (Bật/tắt lớp Canvas)
     document.querySelectorAll('.toggle-btn').forEach(btn => {
-        btn.addEventListener('click', async (e) => {
+        btn.addEventListener('click', (e) => {
             const layerName = e.target.dataset.layer;
             const isActive = e.target.classList.contains('active');
+            e.target.classList.toggle('active');
 
-            // Chỉ cho phép bật/tắt gió trong bản demo này để tránh nặng máy
             if (layerName === 'wind') {
-                if (isActive) {
-                    e.target.classList.remove('active');
-                    if(layerManager.layers.wind) mapEngine.map.removeLayer(layerManager.layers.wind);
-                } else {
-                    e.target.classList.add('active');
-                    await layerManager.addWindLayer(currentLocation.lat, currentLocation.lng);
-                }
-            } else {
-                // Các lớp mưa/mây đang phát triển
-                alert('Tính năng lớp ' + layerName + ' đang được cập nhật!');
+                isActive ? windRenderer.stop() : windRenderer.start();
+            } else if (layerName === 'rain') {
+                isActive ? rainRenderer.stop() : rainRenderer.start();
+            } else if (layerName === 'clouds') {
+                alert('Lớp Mây đang được phát triển (sẽ dùng Canvas vẽ mây mù)!');
             }
         });
     });
 
-    // Xử lý thanh trượt thời gian (Timeline)
+    // Timeline (Demo)
     const slider = document.getElementById('time-slider');
     const hourDisplay = document.getElementById('hour-display');
-    
     slider.addEventListener('input', (e) => {
         const hour = parseInt(e.target.value);
         hourDisplay.textContent = hour === 0 ? 'Bây giờ' : `${hour}:00`;
-        // Logic cập nhật bản đồ theo giờ có thể thêm vào đây
     });
 });
