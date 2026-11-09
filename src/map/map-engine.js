@@ -2,10 +2,9 @@ export class MapEngine {
     constructor(containerId, center, zoom) {
         this.map = L.map(containerId, { zoomControl: false }).setView([center.lat, center.lng], zoom);
         
-        // Sử dụng CartoDB Dark Matter cho giao diện chuyên nghiệp (giống Windy)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; OpenStreetMap &copy; CARTO',
-            subdomains: 'abcd',
+        // Sử dụng OpenStreetMap gốc - 100% Miễn phí, KHÔNG CẦN API KEY
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(this.map);
 
