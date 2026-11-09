@@ -1,8 +1,91 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0a; color: #fff; }
-#app { display: flex; height: 100vh; position: relative; }
-#map { flex: 1; z-index: 1; }
-.panel { position: absolute; top: 20px; right: 20px; width: 320px; background: rgba(20, 20, 30, 0.9); border-radius: 12px; padding: 16px; z-index: 1000; backdrop-filter: blur(10px); }
-#controls { position: absolute; top: 20px; left: 20px; z-index: 1000; background: rgba(20,20,30,0.9); padding: 12px; border-radius: 8px; }
-#search-input { padding: 8px; border-radius: 6px; border: 1px solid #333; background: #1a1a2e; color: #fff; }
-#layer-toggles { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+:root {
+    --bg-color: #0f172a;
+    --panel-bg: rgba(15, 23, 42, 0.75);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --border: rgba(255, 255, 255, 0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+
+#map {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    background: var(--bg-color); /* Fallback */
+}
+
+/* Top Bar */
+#top-bar {
+    position: absolute;
+    top: 20px; left: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.search-container {
+    display: flex;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 30px;
+    overflow: hidden;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.search-container input {
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    color: var(--text-main);
+    font-size: 15px;
+    width: 250px;
+    outline: none;
+}
+
+.search-container button {
+    background: transparent;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.2s;
+}
+
+.search-container button:hover { background: rgba(255,255,255,0.1); }
+
+#layer-toggles {
+    display: flex;
+    gap: 10px;
+}
+
+.toggle-btn {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.toggle-btn.active {
+    background: var(--accent);
+    color: var(--bg-color);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}

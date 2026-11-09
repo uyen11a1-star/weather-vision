@@ -3,37 +3,54 @@ export class LayerManager {
         this.map = map;
         this.layers = {};
     }
+
+    // Lấy dữ liệu gió dạng lưới (Grid) để vẽ hạt chuyển động
     async addWindLayer(lat, lng) {
-        // Tải dữ liệu gió từ Open-Meteo (dạng grid đơn giản)
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&hourly=wind_speed_10m,wind_direction_10m&forecast_days=1`;
-        const res = await fetch(url);
-        const data = await res.json();
-        const windData = this.formatWindData(data, lat, lng);
+        if (this.layers.wind) this.map.removeLayer(this.layers.wind);
+
+        // Giả lập lưới dữ liệu gió (Open-Meteo không có API lưới 1 lần gọi, nên dùng dữ liệu mẫu hoặc gọi nhiều điểm)
+        // Để demo mượt mà, chúng ta sẽ dùng dữ liệu giả lập xoay quanh tâm
+        const gridData = this.generateMockWindGrid(lat, lng);
+        
         this.layers.wind = L.velocityLayer({
             displayValues: true,
-            data: windData,
-            maxVelocity: 25
+            displayOptions: {
+                velocityType: "Gió",
+                displayPosition: "bottomleft",
+                displayEmptyString: "Không có dữ liệu gió"
+            },
+            data: gridData,
+            maxVelocity: 25,
+            colorScale: ["#3288bd", "#66c2a5", "#abdda4", "#e6f598", "#fee08b", "#fdae61", "#f46d43", "#d53e4f"]
         }).addTo(this.map);
     }
-    formatWindData(apiData, lat, lng) {
-        // Chuyển đổi dữ liệu điểm thành mảng grid đơn giản ( demo )
-        const u = apiData.hourly.wind_speed_10m[0] * Math.sin(apiData.hourly.wind_direction_10m[0] * Math.PI/180);
-        const v = apiData.hourly.wind_speed_10m[0] * Math.cos(apiData.hourly.wind_direction_10m[0] * Math.PI/180);
+
+    generateMockWindGrid(centerLat, centerLng) {
+        const u = [], v = [];
+        const nx = 20, ny = 20; // Lưới 20x20
+        const dx = 1, dy = 1; // Độ phân giải
+        const la1 = centerLat + (ny * dy) / 2;
+        const lo1 = centerLng - (nx * dx) / 2;
+
+        // Tạo dữ liệu gió ngẫu nhiên nhưng có hướng (gió mùa Đông Bắc)
+        for (let j = 0; j < ny; j++) {
+            for (let i = 0; i < nx; i++) {
+                // Giả lập hướng Đông Bắc
+                u.push(-5 + Math.random() * 2); // Gió thổi từ Đông sang Tây
+                v.push(-8 + Math.random() * 2); // Gió thổi từ Bắc xuống Nam
+            }
+        }
+
         return [{
             header: { parameterCategory: 2, parameterNumber: 2, refTime: new Date().toISOString() },
-            data: [u, v],
-            la1: lat, lo1: lng, la2: lat, lo2: lng, nx: 1, ny: 1, dx: 1, dy: 1
+            data: u.concat(v), // Gộp mảng U và V
+            la1: la1, lo1: lo1, la2: la1 - ny * dy, lo2: lo1 + nx * dx,
+            nx: nx, ny: ny, dx: dx, dy: dy
         }];
     }
-    addStormLayer(storms) {
-        storms.forEach(s => {
-            if (s.latitude && s.longitude) {
-                L.circleMarker([s.latitude, s.longitude], { color: 'red', radius: 8 })
-                    .bindPopup(`${s.name} - ${s.intensity}`).addTo(this.map);
-            }
-        });
-    }
+
     toggleLayer(name, visible) {
+        if (name === 'wind' && visible) return; // Wind được xử lý riêng
         if (this.layers[name]) {
             visible ? this.map.addLayer(this.layers[name]) : this.map.removeLayer(this.layers[name]);
         }
