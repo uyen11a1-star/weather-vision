@@ -1,0 +1,4 @@
+@media (max-width: 768px) {
+    .panel { width: calc(100% - 40px); right: 20px; left: 20px; top: auto; bottom: 20px; max-height: 40vh; overflow-y: auto; }
+    #controls { right: 20px; }
+}

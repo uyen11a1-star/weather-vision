@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Vision</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/map.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+    <div id="app">
+        <div id="map"></div>
+        <div id="dashboard" class="panel">
+            <h2>Weather Vision</h2>
+            <div id="location-info">Đang tải...</div>
+            <div id="forecast-panel"></div>
+            <div id="alert-panel"></div>
+        </div>
+        <div id="controls">
+            <input type="text" id="search-input" placeholder="Tìm thành phố...">
+            <button id="search-btn">Tìm</button>
+            <div id="layer-toggles">
+                <label><input type="checkbox" id="toggle-wind" checked> Gió</label>
+                <label><input type="checkbox" id="toggle-rain"> Mưa</label>
+                <label><input type="checkbox" id="toggle-clouds"> Mây</label>
+                <label><input type="checkbox" id="toggle-storm"> Bão</label>
+            </div>
+        </div>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-velocity@1.8.0/dist/leaflet-velocity.min.js"></script>
+    <script src="src/config.js"></script>
+    <script src="src/app.js" type="module"></script>
+</body>
+</html>
